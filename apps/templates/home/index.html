@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Single Waybill {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+</style>
+{% endblock stylesheets %}
+
+{% block content %}	
+
+    <!-- [ Main Content ] start -->
+    <section class="pcoded-main-container">
+        <div class="pcoded-content">
+			<!-- [ form-element ] start -->
+			<form method="POST">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-12">
+							<label>Message Title: </star></label>
+							<input rows="3" id="message_title" name="message_title" class="form-control" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label>Message Body: </star></label>
+							<textarea type="text" id="message_body" name="message_body" class="w-100" value=""></textarea>
+						</div>
+					</div>
+
+					<br>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered user-table">
+									<thead>
+										<tr>
+											<th>User ID</th>
+											<th>Name</th>
+											<th>Email</th>
+											<th>Postal Code</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for user in users %}
+										<tr>
+											<td>{{ user.user_id }}</td>
+											<td>{{ user.name }}</td>
+											<td>{{ user.email }}</td>
+											<td>{{ user.postcode }}</td>
+											<td> <a href="/single/{{user.user_id}}" id="send" class="btn btn-fill btn-success" onclick="document.getElementById('send').submit();">Send Notification</a></td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<!-- [ form-element ] end -->
+        </div>
+    </section>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+
+        $('.user-table').DataTable();
+    });
+  
+  </script>
+{% endblock javascripts %}

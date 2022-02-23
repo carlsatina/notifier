@@ -1,0 +1,17 @@
+{
+    "name": "Redgrid - Notification Management",
+    "mastertemplate": "redgrid-notification",
+    "version": "0.0.1",
+    "description": "Redgrid - Notification Management",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/carlsatina/notifier"
+    },
+    "author": "TIG Design and Solutions.",
+    "engines": {
+        "node": ">=10.0.0"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}
