@@ -14,18 +14,19 @@
     <section class="pcoded-main-container">
         <div class="pcoded-content">
 			<!-- [ form-element ] start -->
-			<form method="POST">
+			<form method="POST" id="single" action="/single/121">
+				{% csrf_token %}
 				<div class="col-md-12">
 					<div class="row">
 						<div class="col-md-12">
 							<label>Message Title: </star></label>
-							<input rows="3" id="message_title" name="message_title" class="form-control" >
+							<input rows="3" id="message_title" name="message_title" class="form-control" required>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<label>Message Body: </star></label>
-							<textarea type="text" id="message_body" name="message_body" class="w-100" value=""></textarea>
+							<textarea type="text" id="message_body" name="message_body" class="w-100" value="" required></textarea>
 						</div>
 					</div>
 
@@ -50,7 +51,8 @@
 											<td>{{ user.name }}</td>
 											<td>{{ user.email }}</td>
 											<td>{{ user.postcode }}</td>
-											<td> <a href="/single/{{user.user_id}}" id="send" class="btn btn-fill btn-success" onclick="document.getElementById('send').submit();">Send Notification</a></td>
+											<!-- <td> <a href="/single/{{user.user_id}}" id="send" class="btn btn-fill btn-success" >Send Notification</a></td> -->
+											<td> <a href="#" class="btn btn-fill btn-success" onclick="send_notification('{{user.user_id}}')">Send Notificationss</a></td>
 										</tr>
 										{% endfor %}
 									</tbody>
@@ -76,6 +78,12 @@
 
         $('.user-table').DataTable();
     });
+
+	function send_notification(user_id) {
+		var act = '/single/' + user_id;
+		$("#single").attr('action', act);
+		$("#single").submit();
+	}
   
   </script>
 {% endblock javascripts %}

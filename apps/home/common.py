@@ -14,11 +14,24 @@ class UserData():
             ssl_ca=config('DB_SSL_CA_PATH'))
 
         self.db_cursor = self.db_client.cursor(dictionary=True)
-        self.db_cursor.execute("select * from rg_users left join rg_user_security on rg_users.user_id = rg_user_security.user_id")
+        self.db_cursor.execute("select distinct * from rg_users left join rg_user_security on rg_users.user_id = rg_user_security.user_id")
         self.rows = self.db_cursor.fetchall()
 
     def fetch_all(self):
         return self.rows
+
+    def fetch_with_user_id(self, user_id):
+        # select_statement = "select rg_users.user_id, rg_users.name, rg_users.email, rg_users.postcode, rg_user_security.push_notif_token "
+        # select_statement += "from rg_users, rg_user_security "
+        # select_statement += "where rg_users.user_id = " + str(user_id) + " and rg_user_security.user_id = " + str(user_id)
+
+        # self.db_cursor.execute(select_statement)
+        # user = self.db_cursor.fetchall()
+        for user in self.rows:
+            if user['user_id'] == user_id:
+                return user
+
+        return None
 
     def close(self):
         self.db_cursor.close()

@@ -11,10 +11,9 @@ from .common import UserData
 
 @login_required(login_url="/login/")
 def index(request):
-    context = {'segment': 'index'}
+    context = {'segment': 'dashboard'}
 
     users = UserData()
-
     context['users'] = users.fetch_all()
     # for i in rows:
     #     print ('user_id: ', i['user_id'])
@@ -23,7 +22,7 @@ def index(request):
 
     users.close()
 
-    html_template = loader.get_template('home/index.html')
+    html_template = loader.get_template('home/dashboard.html')
     return HttpResponse(html_template.render(context, request))
 
 
