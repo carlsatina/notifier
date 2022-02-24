@@ -22,9 +22,13 @@ def single(request, user_id):
     db = UserData()
     user = db.fetch_with_user_id(user_id)
 
+    context['users'] = db.fetch_all()
+
     data = {"to":user['push_notif_token'], "title":message_title, "body":message_body}
     r = requests.post(url, data=json.dumps(data), headers=headers)
     db.close()
+
+    context['message'] = "Send Notification Successful!"
 
     html_template = loader.get_template('home/dashboard.html')
     return HttpResponse(html_template.render(context, request))

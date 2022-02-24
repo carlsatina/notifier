@@ -14,19 +14,36 @@
     <section class="pcoded-main-container">
         <div class="pcoded-content">
 			<!-- [ form-element ] start -->
-			<form method="POST" id="single" action="/single/121">
+			<form method="POST" id="single">
 				{% csrf_token %}
 				<div class="col-md-12">
+					{% if message %}
+						<div class="alert alert-success">
+							<button type="button" aria-hidden="true" class="close" data-dismiss="alert">
+								<i class="tim-icons icon-simple-remove"></i>
+							</button>
+							<span>
+								<b>
+									{{ message }}
+								</b>
+							</span>
+						</div>
+					{% endif %}
+					<!-- <div class="row">
+						<div class="col-md-2">
+							<buton type="submit" name="fetch_data" class="btn btn-fill btn-success">Fetch Data</buton>
+						</div>
+					</div> -->
 					<div class="row">
 						<div class="col-md-12">
 							<label>Message Title: </star></label>
-							<input rows="3" id="message_title" name="message_title" class="form-control" required>
+							<input type="text" id="message_title" name="message_title" class="form-control" required>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<label>Message Body: </star></label>
-							<textarea type="text" id="message_body" name="message_body" class="w-100" value="" required></textarea>
+							<input type="text" id="message_body" name="message_body" class="form-control" required>
 						</div>
 					</div>
 
@@ -52,7 +69,7 @@
 											<td>{{ user.email }}</td>
 											<td>{{ user.postcode }}</td>
 											<!-- <td> <a href="/single/{{user.user_id}}" id="send" class="btn btn-fill btn-success" >Send Notification</a></td> -->
-											<td> <a href="#" class="btn btn-fill btn-success" onclick="send_notification('{{user.user_id}}')">Send Notificationss</a></td>
+											<td> <a href="#" class="btn btn-fill btn-primary" onclick="send_notification('{{user.user_id}}')">Send</a></td>
 										</tr>
 										{% endfor %}
 									</tbody>

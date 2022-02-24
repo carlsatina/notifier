@@ -15,12 +15,17 @@ def index(request):
 
     users = UserData()
     context['users'] = users.fetch_all()
+
     # for i in rows:
     #     print ('user_id: ', i['user_id'])
     #     print ('user: ', i['name'])
     #     print ('notif token: ', i['push_notif_token'])
 
     users.close()
+    # if request.method == 'POST':
+    #     print ('request is post')
+    # else:
+    #     print ('get method')
 
     html_template = loader.get_template('home/dashboard.html')
     return HttpResponse(html_template.render(context, request))
