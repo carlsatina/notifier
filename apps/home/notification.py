@@ -3,19 +3,17 @@ import mysql.connector
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from .common import UserData
+from .common import UserData, Notifier
 import json
 import requests
+
+from.models import GroupNames, Groups
+from.forms import GroupsForm, GroupNamesForm
 
 @login_required(login_url="/login/")
 def single(request, user_id):
     context = {'segment': 'index'}
-    url = "https://exp.host/--/api/v2/push/send"
-    headers = {
-        'Content-Type': 'application/json',
-        'accept': 'application/json',
-        'accept-encoding': 'gzip, deflate'
-    }
+    data = []
 
     message_body = request.POST.get('message_body')
     message_title = request.POST.get('message_title')
@@ -23,12 +21,97 @@ def single(request, user_id):
     user = db.fetch_with_user_id(user_id)
 
     context['users'] = db.fetch_all()
+    data.append({"to":user['push_notif_token'], "title":message_title, "body":message_body})
 
-    data = {"to":user['push_notif_token'], "title":message_title, "body":message_body}
-    r = requests.post(url, data=json.dumps(data), headers=headers)
+    notifier = Notifier()
+    notifier.send_notification(data)
+
     db.close()
 
     context['message'] = "Send Notification Successful!"
 
     html_template = loader.get_template('home/dashboard.html')
     return HttpResponse(html_template.render(context, request))
+
+def multiple(request):
+    context = {'segment': 'multiple'}
+    data = []
+
+    print (request.POST)
+    groups = GroupNames.objects.all()
+
+    if request.method == 'POST':
+        if request.POST.get('send_notification') != None:
+
+            selected_group_id = request.POST.get('selected_group')
+            group_obj = Groups.objects.filter(group_id=selected_group_id)
+            msg_title = request.POST.get('message_title')
+            msg_body = request.POST.get('message_body')
+            print ('send notification hre')
+            # Send The epxo notifiction here.
+            db = UserData()
+            users = db.fetch_all()
+            for group in group_obj:
+                for user in users:
+                    if group.user_id == user['user_id']:
+                        data.append({"to":user['push_notif_token'], "title":msg_title, "body":msg_body})
+
+            notifier = Notifier()
+            notifier.send_notification(data)
+
+    context={'groups': groups}    
+
+    html_template = loader.get_template('home/multiple.html')
+    return HttpResponse(html_template.render(context, request))
+
+# GROUP MANAGEMENT
+def group_management(request):
+    context = {'segment': 'group-management'}
+
+    group_ids = []
+    group_name = ''
+
+    db_group_names = GroupNames.objects.all()
+    context['db_group_names'] = db_group_names
+
+    print ("request: ", request.POST)
+
+    if request.method == 'POST':
+        if request.POST.get('add_group_name') != None:
+            group_name = request.POST.get('group_name')
+
+            # Add group name to Database here.
+            gform = GroupNamesForm(request.POST, instance=GroupNames())
+
+            if gform.is_valid():
+                gform_instance = gform.save(commit=False)
+                gform_instance.group_name = group_name
+                gform_instance.save()
+            else:
+                print ('form is not valid!')
+
+        if request.POST.get('selectedUsers[]') != None:
+            group_ids = request.POST.getlist('selectedUsers[]')
+
+            # Add users to Group here.
+            if request.POST.get('group_name_id') != '':
+                group_name_id = request.POST.get('group_name_id')
+                group_name_obj = GroupNames.objects.get(id=group_name_id)
+
+                print ('group_name_obj: ', group_name_obj.group_name)
+
+                for ids in group_ids:
+                    g_ins = Groups(user_id=ids, group_id=group_name_obj)
+                    g_ins.save()
+
+       
+    for ids in group_ids:
+        print ('id: ', ids)
+    db = UserData()
+
+    context['users'] = db.fetch_all()
+    db.close()
+
+    html_template = loader.get_template('home/group-management.html')
+    return HttpResponse(html_template.render(context, request))
+

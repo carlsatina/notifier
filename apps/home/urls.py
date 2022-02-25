@@ -11,6 +11,10 @@ urlpatterns = [
     # Single Notification
     path('single/<int:user_id>', notification.single, name='single-notification'),
 
+    # Group Notification
+    path('multiple', notification.multiple, name='multiple-notification'),
+    path('group-management', notification.group_management, name='group-management'),
+
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
 

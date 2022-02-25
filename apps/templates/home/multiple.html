@@ -1,0 +1,90 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Single Waybill {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+</style>
+{% endblock stylesheets %}
+
+{% block content %}	
+
+    <!-- [ Main Content ] start -->
+    <section class="pcoded-main-container">
+        <div class="pcoded-content">
+			<!-- [ form-element ] start -->
+			<form method="POST" id="single">
+				{% csrf_token %}
+				<div class="col-md-12">
+					{% if message %}
+						<div class="alert alert-success">
+							<button type="button" aria-hidden="true" class="close" data-dismiss="alert">
+								<i class="tim-icons icon-simple-remove"></i>
+							</button>
+							<span>
+								<b>
+									{{ message }}
+								</b>
+							</span>
+						</div>
+					{% endif %}
+					<!-- <div class="row">
+						<div class="col-md-2">
+							<buton type="submit" name="fetch_data" class="btn btn-fill btn-success">Fetch Data</buton>
+						</div>
+					</div> -->
+					<div class="row">
+						<div class="col-md-12">
+							<label>Message Title: </star></label>
+							<input type="text" id="message_title" name="message_title" class="form-control" required>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label>Message Body: </star></label>
+							<input type="text" id="message_body" name="message_body" class="form-control" required>
+						</div>
+					</div>
+
+					<br>
+					<div class="row">
+						<div class="form-group col-md-4">
+							<select id="inputState" name="selected_group" class="form-control">
+								<option name="" selected>Select a Group</option>
+								{% for group in groups %}
+									<option value="{{group.id}}">{{group.group_name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="cold-md-2">
+							<button type="submit" class="btn btn-fill btn-primary" name="send_notification">Send Notification</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<!-- [ form-element ] end -->
+        </div>
+    </section>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+
+        $('.user-table').DataTable();
+    });
+
+	function send_notification(user_id) {
+		var act = '/single/' + user_id;
+		$("#single").attr('action', act);
+		$("#single").submit();
+	}
+  
+  </script>
+{% endblock javascripts %}

@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import mysql.connector
 from decouple import config
+import requests, json
 
 class UserData():
     def __init__(self):
@@ -36,3 +37,26 @@ class UserData():
     def close(self):
         self.db_cursor.close()
         self.db_client.close()
+
+
+class Notifier():
+    def __init__ (self):
+
+        self.url = "https://exp.host/--/api/v2/push/send"
+        self.headers = {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+            'accept-encoding': 'gzip, deflate'
+        }
+
+    def send_notification(self, data):
+
+        if len(data) > 1:
+            # Send Multiple
+            print ('multiple data: ', data)
+            r = requests.post(self.url, data=json.dumps(data), headers=self.headers)
+        else:
+            # Send Single
+            r = requests.post(self.url, data=json.dumps(data[0]), headers=self.headers)
+
+
