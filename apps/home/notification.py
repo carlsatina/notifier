@@ -20,11 +20,16 @@ def single(request, user_id):
     db = UserData()
     user = db.fetch_with_user_id(user_id)
 
+    sched = request.POST.get('schedule_date')
+    ds = sched.split('T')
+
+    for d in ds:
+        print ('d: ', d)
     context['users'] = db.fetch_all()
     data.append({"to":user['push_notif_token'], "title":message_title, "body":message_body})
 
-    notifier = Notifier()
-    notifier.send_notification(data)
+    # notifier = Notifier()
+    # notifier.send_notification(data)
 
     db.close()
 

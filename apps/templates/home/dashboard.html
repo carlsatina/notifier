@@ -46,6 +46,16 @@
 							<input type="text" id="message_body" name="message_body" class="form-control" required>
 						</div>
 					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group form-check">
+								<input type="checkbox" class="form-check-input" id="schedule_option" name="schedule_option">
+								<label class="form-check-label" for="schedule_option">Scheduled Notification (dd/mm/yyy)</label>
+							</div>
+							<input type="datetime-local" id="schedule_date" name="schedule_date" class="form-control" disabled>
+						</div>
+					</div>
 
 					<br>
 					<div class="row">
@@ -95,6 +105,16 @@
 
         $('.user-table').DataTable();
     });
+
+	$('#schedule_option').change(function() {
+		if(this.checked) {
+			$('#schedule_date').attr('disabled', false)
+		} else {
+			$('#schedule_date').attr('disabled', true)
+		}
+	})
+
+	// $('#schedule_date').datepicker();
 
 	function send_notification(user_id) {
 		var act = '/single/' + user_id;
