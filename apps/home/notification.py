@@ -10,8 +10,13 @@ import requests
 from.models import GroupNames, Groups
 from.forms import GroupsForm, GroupNamesForm
 
+
+# This is the handler for single target notification.
 @login_required(login_url="/login/")
 def single(request, user_id):
+    """ 
+    Fetch data from externl mysql DB and get the expo token.
+    """
     context = {'segment': 'index'}
     data = []
 
@@ -23,9 +28,6 @@ def single(request, user_id):
     sched = request.POST.get('schedule_date')
     ds = sched.split('T')
 
-    for d in ds:
-        print ('d: ', d)
-    context['users'] = db.fetch_all()
     data.append({"to":user['push_notif_token'], "title":message_title, "body":message_body})
 
     # notifier = Notifier()
@@ -35,10 +37,16 @@ def single(request, user_id):
 
     context['message'] = "Send Notification Successful!"
 
-    html_template = loader.get_template('home/dashboard.html')
+    html_template = loader.get_template('home/single-notification.html')
     return HttpResponse(html_template.render(context, request))
 
-def multiple(request):
+
+# This is the 
+@login_required(login_url="/login/")
+def group_notification(request):
+    """ 
+    Select a group and send notification to the members of the selected group.
+    """
     context = {'segment': 'multiple'}
     data = []
 
@@ -66,11 +74,15 @@ def multiple(request):
 
     context={'groups': groups}    
 
-    html_template = loader.get_template('home/multiple.html')
+    html_template = loader.get_template('home/group-notification.html')
     return HttpResponse(html_template.render(context, request))
 
-# GROUP MANAGEMENT
+
+@login_required(login_url="/login/")
 def group_management(request):
+    """ 
+    Add a new groupname and add members to that particular group.
+    """
     context = {'segment': 'group-management'}
 
     group_ids = []
@@ -78,8 +90,6 @@ def group_management(request):
 
     db_group_names = GroupNames.objects.all()
     context['db_group_names'] = db_group_names
-
-    print ("request: ", request.POST)
 
     if request.method == 'POST':
         if request.POST.get('add_group_name') != None:
@@ -109,9 +119,6 @@ def group_management(request):
                     g_ins = Groups(user_id=ids, group_id=group_name_obj)
                     g_ins.save()
 
-       
-    for ids in group_ids:
-        print ('id: ', ids)
     db = UserData()
 
     context['users'] = db.fetch_all()

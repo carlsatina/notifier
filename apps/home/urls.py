@@ -12,7 +12,7 @@ urlpatterns = [
     path('single/<int:user_id>', notification.single, name='single-notification'),
 
     # Group Notification
-    path('multiple', notification.multiple, name='multiple-notification'),
+    path('group-notification', notification.group_notification, name='group-notification'),
     path('group-management', notification.group_management, name='group-management'),
 
     # Matches any html file
